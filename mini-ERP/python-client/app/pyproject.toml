@@ -1,0 +1,12 @@
+[project]
+name = "python-client"
+version = "0.1.0"
+description = "Client for the mini-ERP API"
+authors = [{name = "Guillem Parrado"}]
+dependencies = [
+    "requests"
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

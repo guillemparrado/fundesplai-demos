@@ -1,0 +1,16 @@
+name: fundesplai-demo-mini-erp-dev
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    container_name: fundesplai-demo-mini-erp-dev-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: demoerp
+      POSTGRES_PASSWORD: demoerp
+      POSTGRES_DB: demoerp
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ../scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
