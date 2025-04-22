@@ -1,0 +1,46 @@
+name: fundesplai-demo-mini-erp
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: fundesplai-demo-mini-erp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: demoerp
+      POSTGRES_PASSWORD: demoerp
+      POSTGRES_DB: demoerp
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build:
+      context: ./java-backend
+      dockerfile: Dockerfile
+    container_name: fundesplai-demo-mini-erp-backend
+    environment:
+      DB_HOST: fundesplai-demo-mini-erp-postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  client:
+    build:
+      context: ./python-client
+      dockerfile: Dockerfile
+    container_name: fundesplai-demo-mini-erp-client
+    environment:
+      BACKEND_URL: http://fundesplai-demo-mini-erp-backend:8080/api
+    depends_on:
+      - backend
+    entrypoint: >
+      sh -c "
+      until nc -z fundesplai-demo-mini-erp-backend 8080; do
+        echo 'Waiting for Backend...';
+        sleep 2;
+      done;
+      python client.py
+      "
