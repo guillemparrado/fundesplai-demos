@@ -1,2 +1,6 @@
 # Local data
 **/db/dev/data
+
+# Python client build
+**.egg-info
+**build
